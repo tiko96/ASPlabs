@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BookStore.Models;
+using BookStore.Util;
 
 namespace BookStore.Controllers
 {
@@ -49,6 +50,43 @@ namespace BookStore.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+        public ActionResult GetHtml()
+        {
+            return new HtmlResult("<h2>Привет мир!</h2>");
+        }
+        public ActionResult GetImage()
+        {
+            string path = "../pizzacat.jpg";
+            return new ImageResult(path);
+        }
+        public ActionResult Check(int age)
+        {
+            if (age < 21)
+            {
+                return new HttpStatusCodeResult(404);
+            }
+            return View();
+        }
+        public FileResult GetFile()
+        {
+            // Путь к файлу
+            string file_path = Server.MapPath("../pizzacat.jpg");
+            // Тип файла - content-type
+            string file_type = "image/jpg";
+            // Имя файла - необязательно
+            string file_name = "PIZZA CAT";
+            return File(file_path, file_type, file_name);
+        }
+        public string GetInfo()
+        {
+            string browser = HttpContext.Request.Browser.Browser;
+            string user_agent = HttpContext.Request.UserAgent;
+            string url = HttpContext.Request.RawUrl;
+            string ip = HttpContext.Request.UserHostAddress;
+            string referrer = HttpContext.Request.UrlReferrer == null ? "" : HttpContext.Request.UrlReferrer.AbsoluteUri;
+            return "<p>Browser: " + browser + "</p><p>User-Agent: " + user_agent + "</p><p>Url запроса: " + url +
+                "</p><p>Реферер: " + referrer + "</p><p>IP-адрес: " + ip + "</p>";
         }
     }
 }
